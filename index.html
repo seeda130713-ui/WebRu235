@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dekbangtlez Gang</title>
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --bg-soft:#111111;
+    --card:#161616;
+    --card-border:#262626;
+    --red:#c81e2b;
+    --red-glow:rgba(200,30,43,0.35);
+    --text:#f2f2f2;
+    --text-dim:#9a9a9a;
+    --text-faint:#5f5f5f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ---------- HERO PAGE ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:24px;
+    background:
+      radial-gradient(ellipse at center, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 75%),
+      linear-gradient(180deg, #050505 0%, #0a0a0a 100%);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(115deg, rgba(200,30,43,0.06) 0px, rgba(200,30,43,0.06) 2px, transparent 2px, transparent 140px);
+    pointer-events:none;
+  }
+  .hero-noise{
+    position:absolute;
+    inset:0;
+    opacity:0.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events:none;
+  }
+  .eyebrow{
+    position:relative;
+    letter-spacing:6px;
+    font-size:11px;
+    color:var(--red);
+    text-transform:uppercase;
+    font-weight:700;
+    margin-bottom:18px;
+    opacity:0;
+    animation:fadeUp .7s ease forwards .1s;
+  }
+  .hero h1{
+    position:relative;
+    font-size:clamp(2.4rem, 7vw, 4.6rem);
+    font-weight:800;
+    margin:0;
+    letter-spacing:-1px;
+    background:linear-gradient(180deg,#ffffff 0%, #cfcfcf 60%, #8f8f8f 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 60px var(--red-glow);
+    opacity:0;
+    animation:fadeUp .8s ease forwards .25s;
+  }
+  .hero .count{
+    position:relative;
+    margin-top:16px;
+    font-size:13px;
+    letter-spacing:3px;
+    color:var(--text-dim);
+    font-weight:600;
+    opacity:0;
+    animation:fadeUp .8s ease forwards .4s;
+  }
+  .hero .count strong{
+    color:var(--text);
+    font-size:15px;
+  }
+  .btn-primary{
+    position:relative;
+    margin-top:34px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:#161616;
+    border:1px solid var(--card-border);
+    color:var(--text);
+    padding:14px 30px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .25s ease;
+    opacity:0;
+    animation:fadeUp .8s ease forwards .55s;
+  }
+  .btn-primary:hover{
+    border-color:var(--red);
+    box-shadow:0 0 24px var(--red-glow);
+    transform:translateY(-2px);
+  }
+  .btn-primary svg{width:18px;height:18px;stroke:var(--red);}
+
+  .btn-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .btn-row .btn-primary{margin-top:0;}
+  .btn-download{
+    border-color:#2a2a2a;
+  }
+  .btn-download svg{stroke:#5b8def;}
+  .btn-download:hover{
+    border-color:#5b8def;
+    box-shadow:0 0 24px rgba(91,141,239,0.35);
+  }
+
+  .hero-footer{
+    position:absolute;
+    bottom:22px;
+    font-size:11px;
+    color:var(--text-faint);
+    letter-spacing:.5px;
+  }
+
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* ---------- LIST PAGE ---------- */
+  .list-page{
+    display:none;
+    min-height:100vh;
+    padding:40px 20px 80px;
+  }
+  .list-page.active{display:block;}
+  .hero.hidden{display:none;}
+
+  .list-header{
+    max-width:900px;
+    margin:0 auto 34px;
+    text-align:center;
+    position:relative;
+  }
+  .back-btn{
+    position:absolute;
+    left:0;
+    top:6px;
+    background:none;
+    border:1px solid var(--card-border);
+    color:var(--text-dim);
+    width:36px;height:36px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .2s ease;
+  }
+  .back-btn:hover{border-color:var(--red); color:var(--text);}
+  .list-header h2{
+    font-size:1.9rem;
+    font-weight:800;
+    margin:0 0 22px;
+    letter-spacing:-.5px;
+  }
+  .search-wrap{
+    max-width:520px;
+    margin:0 auto;
+    position:relative;
+  }
+  .search-wrap svg{
+    position:absolute;
+    left:16px; top:50%;
+    transform:translateY(-50%);
+    width:16px;height:16px;
+    stroke:var(--text-faint);
+  }
+  .search-wrap input{
+    width:100%;
+    background:var(--bg-soft);
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    padding:13px 16px 13px 42px;
+    color:var(--text);
+    font-size:14px;
+    outline:none;
+    transition:border-color .2s ease;
+  }
+  .search-wrap input:focus{border-color:var(--red);}
+  .search-wrap input::placeholder{color:var(--text-faint);}
+
+  .group{
+    max-width:900px;
+    margin:0 auto 36px;
+  }
+  .group-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:16px;
+    letter-spacing:.3px;
+  }
+  .group-title .bar{
+    width:4px; height:16px;
+    background:var(--red);
+    border-radius:2px;
+  }
+  .group-title.member .bar{background:#666;}
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:14px;
+    padding:18px 14px;
+    text-align:center;
+    transition:all .25s ease;
+    cursor:default;
+  }
+  .card:hover{
+    border-color:var(--red);
+    transform:translateY(-3px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  .avatar{
+    width:64px;height:64px;
+    border-radius:50%;
+    margin:0 auto 12px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 35% 35%, #c81e2b 0%, #4a0d12 60%),
+      #1a1a1a;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    font-size:20px;
+    color:#fff;
+    border:2px solid #2a2a2a;
+  }
+  .card.leader .avatar{
+    border-color:var(--red);
+    box-shadow:0 0 18px var(--red-glow);
+  }
+  .name{
+    font-size:13.5px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    margin-bottom:6px;
+    word-break:break-word;
+  }
+  .crown{width:13px;height:13px; fill:var(--red);}
+  .fb-link{
+    font-size:11.5px;
+    color:#5b8def;
+    text-decoration:none;
+  }
+  .fb-link:hover{text-decoration:underline;}
+  .empty-state{
+    max-width:900px;
+    margin:60px auto;
+    text-align:center;
+    color:var(--text-faint);
+    font-size:14px;
+  }
+
+  /* ---------- DOWNLOAD PAGE ---------- */
+  .dl-page{
+    display:none;
+    min-height:100vh;
+    padding:40px 20px 80px;
+    align-items:center;
+    justify-content:center;
+  }
+  .dl-page.active{display:flex;}
+  .dl-card{
+    max-width:420px;
+    width:100%;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:18px;
+    padding:36px 30px;
+    text-align:center;
+    position:relative;
+  }
+  .dl-card .back-btn{
+    position:absolute;
+    left:16px; top:16px;
+  }
+  .dl-thumb{
+    width:88px;height:88px;
+    border-radius:20px;
+    margin:0 auto 18px;
+    object-fit:cover;
+    background:
+      radial-gradient(circle at 35% 35%, #c81e2b 0%, #4a0d12 60%),
+      #1a1a1a;
+    border:2px solid #2a2a2a;
+  }
+  .dl-name{
+    font-size:1.3rem;
+    font-weight:800;
+    margin-bottom:6px;
+  }
+  .dl-sub{
+    font-size:12.5px;
+    color:var(--text-faint);
+    margin-bottom:26px;
+  }
+  .code-form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .code-form input{
+    background:var(--bg-soft);
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:12px 14px;
+    color:var(--text);
+    font-size:14px;
+    outline:none;
+    text-align:center;
+    letter-spacing:2px;
+    transition:border-color .2s ease;
+  }
+  .code-form input:focus{border-color:var(--red);}
+  .code-error{
+    font-size:12px;
+    color:var(--red);
+    min-height:16px;
+    margin-top:-2px;
+  }
+  .code-form button{
+    background:var(--red);
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:filter .2s ease;
+  }
+  .code-form button:hover{filter:brightness(1.1);}
+
+  .dl-unlocked{display:none;}
+  .dl-unlocked.show{display:flex; flex-direction:column; gap:10px;}
+  .dl-unlocked .status{
+    font-size:12.5px;
+    color:#7fd77f;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin-bottom:6px;
+  }
+  .dl-unlocked .status svg{width:14px;height:14px; stroke:#7fd77f;}
+  .btn-download-real{
+    background:linear-gradient(135deg, var(--red), #8f1420);
+    border:none;
+    border-radius:10px;
+    padding:13px;
+    color:#fff;
+    font-size:14px;
+    font-weight:700;
+    text-decoration:none;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    transition:transform .2s ease, filter .2s ease;
+  }
+  .btn-download-real:hover{transform:translateY(-2px); filter:brightness(1.1);}
+
+  /* ---------- PROGRAM LIST (TOOLBOX) PAGE ---------- */
+  .prog-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+    gap:18px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .prog-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:16px;
+    padding:22px 16px;
+    text-align:center;
+    transition:all .25s ease;
+  }
+  .prog-card:hover{
+    border-color:var(--red);
+    transform:translateY(-3px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  .prog-icon{
+    width:72px;height:72px;
+    border-radius:18px;
+    margin:0 auto 14px;
+    object-fit:cover;
+    background:#1a1a1a;
+    border:1px solid var(--card-border);
+  }
+  .prog-name{
+    font-size:14.5px;
+    font-weight:700;
+    margin-bottom:16px;
+  }
+  .btn-prog-download{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    width:100%;
+    background:var(--red);
+    border:none;
+    border-radius:9px;
+    padding:10px;
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    transition:filter .2s ease, transform .2s ease;
+  }
+  .btn-prog-download:hover{filter:brightness(1.1); transform:translateY(-1px);}
+  .btn-prog-download svg{width:14px;height:14px;}
+</style>
+</head>
+<body>
+
+  <!-- HERO / LANDING -->
+  <section class="hero" id="heroPage">
+    <div class="hero-noise"></div>
+    <div class="eyebrow">Welcome to</div>
+    <h1>RU235 Gang</h1>
+    <div class="count"><strong id="memberCount">3</strong> PERSON IN MY GANG</div>
+    <div class="btn-row" style="margin-top:34px; opacity:0; animation:fadeUp .8s ease forwards .55s;">
+      <button class="btn-primary" id="goToList">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+        Person List
+      </button>
+      <button class="btn-primary btn-download" id="goToDownload">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        Program
+      </button>
+    </div>
+    <div class="hero-footer">© 2026 RU235 — We will never abandon each other.</div>
+  </section>
+
+  <!-- PERSON LIST PAGE -->
+  <section class="list-page" id="listPage">
+    <div class="list-header">
+      <button class="back-btn" id="backBtn" title="Back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <h2>Person List</h2>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="ค้นหารายชื่อ...">
+      </div>
+    </div>
+
+    <div id="resultsWrap">
+      <div class="group" id="leaderGroup">
+        <div class="group-title"><span class="bar"></span>Leader</div>
+        <div class="cards" id="leaderCards"></div>
+      </div>
+      <div class="group" id="memberGroup">
+        <div class="group-title member"><span class="bar"></span>Member</div>
+        <div class="cards" id="memberCards"></div>
+      </div>
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none;">ไม่พบรายชื่อที่ค้นหา</div>
+  </section>
+
+  <!-- PROGRAM LIST (TOOLBOX) PAGE -->
+  <section class="list-page" id="programListPage">
+    <div class="list-header">
+      <button class="back-btn" id="backBtnProgList" title="Back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <h2>Program</h2>
+    </div>
+    <div class="prog-cards" id="progCards"></div>
+  </section>
+
+  <!-- DOWNLOAD PAGE -->
+  <section class="dl-page" id="dlPage">
+    <div class="dl-card">
+      <button class="back-btn" id="backBtnDl" title="Back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <img class="dl-thumb" id="dlThumb" alt="program icon">
+      <div class="dl-name" id="dlName"></div>
+      <div class="dl-sub">ใส่รหัสเพื่อปลดล็อกการดาวโหลด</div>
+
+      <div class="code-form" id="codeForm">
+        <input type="text" id="codeInput" placeholder="กรอกรหัส...">
+        <div class="code-error" id="codeError"></div>
+        <button id="unlockBtn">ยืนยันรหัส</button>
+      </div>
+
+      <div class="dl-unlocked" id="dlUnlocked">
+        <div class="status">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          ปลดล็อกสำเร็จ
+        </div>
+        <a class="btn-download-real" id="realDownloadLink" href="#" target="_blank" rel="noopener">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          ดาวโหลดโปรแกรม
+        </a>
+      </div>
+    </div>
+  </section>
+
+<script>
+  // ---- Data: edit this list to add / remove people ----
+  const people = [
+    { name: "Dream Dernsabud", role: "leader", fb: "https://www.facebook.com/profile.php?id=61572040434082&locale=th_TH", image: "" },
+    { name: "Willim Lampat", role: "leader", fb: "https://facebook.com", image: "" },
+    { name: "Swon Seam", role: "leader", fb: "https://facebook.com", image: "" },
+    { name: "Johnny Dernsabud", role: "member", fb: "https://facebook.com", image: "" },
+    { name: "King Dernsabud", role: "member", fb: "https://facebook.com", image: "" },
+    { name: "James Seam", role: "member", fb: "https://facebook.com", image: "" },
+    { name: "Snow Xz", role: "member", fb: "https://facebook.com", image: "" },
+  ];
+
+  // ---- Programs config: edit this list to add / remove toolbox items ----
+  // codes: ใส่ได้หลายรหัสต่อโปรแกรม, image ถ้าไม่ใส่จะใช้ไอคอนตัวอักษรแทน
+  const programs = [
+    {
+      name: "Clen Log",
+      image: "https://cdn.discordapp.com/attachments/1368996282273759253/1369160405414318180/image.png?ex=6a8528fe&is=6a83d77e&hm=7a10d9c1fd6d8222d20c922397d805a5f40c9f93b959a85869b4a12296900383&",
+      downloadUrl: "https://cdn.discordapp.com/attachments/1142507380148551760/1284100875459104768/clean_by_archi.bat?ex=6a84dee2&is=6a838d62&hm=749c6f83e23fef378e95bf2d47834e4dc123ea1060ae0333c35cc87b38a76d63&",
+      codes: ["1234"]
+    },
+    {
+      name: "TopG",
+      image: "https://cdn.discordapp.com/attachments/1368996282273759253/1368996615200702665/image-5.png?ex=6a853933&is=6a83e7b3&hm=c61562c34494a2f1749d0232c43cbb8099ad35e0dcc0a46fd6fbd4cc6aea7a85&",
+      downloadUrl: "https://mega.nz/file/l2sQHTKC#G9W3lkPQ--wxbACBjP5JbkVS0qyCOvqCW6lkcCVck9s",
+      codes: ["1234"]
+    },
+    {
+      name: "X4 Ghoststore",
+      image: "https://cdn.discordapp.com/attachments/1475791796083626085/1525428677750554684/image.png?ex=6a84c9e9&is=6a837869&hm=65eb16dc243e85877179c9a5362af5858ac3ebe9d23da2c44752cc8b31b981f1&",
+      downloadUrl: "https://cdn.discordapp.com/attachments/1475791796083626085/1525428677414883500/X4.7z?ex=6a84c9e9&is=6a837869&hm=07a66d314ff7f0e17e23a9a4a809fffe7062b8500ce0a1c5678271d1c4fe60e8&",
+      codes: ["1234"]
+    },
+    {
+      name: "Arzen Key :  arzenshopfree ทะลุหมด",
+      image: "https://cdn.discordapp.com/attachments/1492945197430997272/1492946052519694526/Untitled_design.png?ex=6a85451c&is=6a83f39c&hm=5f80e2311b3501e33a08890842b90c5374e1c4f644950c44612d200aa164ae70&",
+      downloadUrl: "https://pub-a0f157286e3d403d8885d643b27de4c2.r2.dev/freearzen2026/FREEARZEN2026.exe",
+      codes: ["1234"]
+    },
+    {
+      name: "RealFirstx V3",
+      image: "https://cdn.discordapp.com/attachments/1231594523772194897/1231596547892838520/image.png?ex=6a8505ea&is=6a83b46a&hm=93788caf57baa062b65c44e5ff504fa877fe6055f090a33fac40066ff064a609&",
+      downloadUrl: "https://files.catbox.moe/pu4h62.bat",
+      codes: ["1234"]
+    },
+   {
+      name: "Clen Log candy",
+      image: "https://cdn.discordapp.com/attachments/1492104954482266142/1492119286523625543/k6w9c8.png?ex=6a84e620&is=6a8394a0&hm=5bc0a26223907ff7f842b1b6081237725c4f32a6feec215bf5a7fc62a6b3320f&",
+      downloadUrl: "https://cdn.discordapp.com/attachments/1534583262050127883/1534583376445575279/dbcdf0ef12705096.rar?ex=6a852264&is=6a83d0e4&hm=2b28fb6ec42ffda701d139d06f19a61bb34f03a5b7422861448d624bf8dc5c9f&",
+      codes: ["1234"]
+    },
+  ];
+
+  let currentProgram = null;
+
+  const heroPage = document.getElementById('heroPage');
+  const listPage = document.getElementById('listPage');
+  const dlPage = document.getElementById('dlPage');
+  const programListPage = document.getElementById('programListPage');
+  const memberCount = document.getElementById('memberCount');
+  const leaderCards = document.getElementById('leaderCards');
+  const memberCards = document.getElementById('memberCards');
+  const leaderGroup = document.getElementById('leaderGroup');
+  const memberGroup = document.getElementById('memberGroup');
+  const emptyState = document.getElementById('emptyState');
+  const searchInput = document.getElementById('searchInput');
+
+  memberCount.textContent = people.length;
+
+  function initials(name){
+    return name.trim().slice(0,2).toUpperCase();
+  }
+
+  function renderCard(person){
+    const isLeader = person.role === 'leader';
+    const avatarInner = person.image
+      ? `<img src="${person.image}" alt="${person.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+      : initials(person.name);
+    return `
+      <div class="card ${isLeader ? 'leader':''}">
+        <div class="avatar">${avatarInner}</div>
+        <div class="name">${person.name}${isLeader ? '<svg class="crown" viewBox="0 0 24 24"><path d="M2 18h20l-2-9-5 4-3-7-3 7-5-4-2 9z"/></svg>' : ''}</div>
+        <a class="fb-link" href="${person.fb}" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    `;
+  }
+
+  function renderList(filter=''){
+    const q = filter.trim().toLowerCase();
+    const leaders = people.filter(p => p.role==='leader' && p.name.toLowerCase().includes(q));
+    const members = people.filter(p => p.role==='member' && p.name.toLowerCase().includes(q));
+
+    leaderCards.innerHTML = leaders.map(renderCard).join('');
+    memberCards.innerHTML = members.map(renderCard).join('');
+
+    leaderGroup.style.display = leaders.length ? 'block' : 'none';
+    memberGroup.style.display = members.length ? 'block' : 'none';
+    emptyState.style.display = (leaders.length===0 && members.length===0) ? 'block' : 'none';
+  }
+
+  document.getElementById('goToList').addEventListener('click', () => {
+    heroPage.classList.add('hidden');
+    listPage.classList.add('active');
+    renderList();
+  });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    listPage.classList.remove('active');
+    heroPage.classList.remove('hidden');
+    searchInput.value = '';
+  });
+
+  searchInput.addEventListener('input', (e) => renderList(e.target.value));
+
+  // ---- Toolbox program list page ----
+  const progCards = document.getElementById('progCards');
+
+  function renderProgramList(){
+    progCards.innerHTML = programs.map((p, i) => `
+      <div class="prog-card">
+        <img class="prog-icon" src="${p.image}" alt="${p.name}">
+        <div class="prog-name">${p.name}</div>
+        <button class="btn-prog-download" data-index="${i}">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          ดาวโหลด
+        </button>
+      </div>
+    `).join('');
+
+    progCards.querySelectorAll('.btn-prog-download').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentProgram = programs[Number(btn.dataset.index)];
+        programListPage.classList.remove('active');
+        dlPage.classList.add('active');
+        resetDownloadState();
+      });
+    });
+  }
+
+  document.getElementById('goToDownload').addEventListener('click', () => {
+    heroPage.classList.add('hidden');
+    programListPage.classList.add('active');
+    renderProgramList();
+  });
+
+  document.getElementById('backBtnProgList').addEventListener('click', () => {
+    programListPage.classList.remove('active');
+    heroPage.classList.remove('hidden');
+  });
+
+  // ---- Download detail page ----
+  const dlThumb = document.getElementById('dlThumb');
+  const dlName = document.getElementById('dlName');
+  const codeForm = document.getElementById('codeForm');
+  const codeInput = document.getElementById('codeInput');
+  const codeError = document.getElementById('codeError');
+  const dlUnlocked = document.getElementById('dlUnlocked');
+  const realDownloadLink = document.getElementById('realDownloadLink');
+
+  function resetDownloadState(){
+    if(!currentProgram) return;
+    dlThumb.src = currentProgram.image;
+    dlName.textContent = currentProgram.name;
+    codeForm.style.display = 'flex';
+    dlUnlocked.classList.remove('show');
+    codeInput.value = '';
+    codeError.textContent = '';
+    realDownloadLink.href = currentProgram.downloadUrl;
+  }
+
+  document.getElementById('backBtnDl').addEventListener('click', () => {
+    dlPage.classList.remove('active');
+    programListPage.classList.add('active');
+  });
+
+  function tryUnlock(){
+    const val = codeInput.value.trim();
+    if(currentProgram.codes.includes(val)){
+      codeForm.style.display = 'none';
+      dlUnlocked.classList.add('show');
+      codeError.textContent = '';
+    } else {
+      codeError.textContent = 'รหัสไม่ถูกต้อง ลองใหม่อีกครั้ง';
+    }
+  }
+
+  document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+  codeInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') tryUnlock();
+  });
+</script>
+</body>
+</html>
